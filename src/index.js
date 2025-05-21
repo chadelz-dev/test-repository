@@ -1,3 +1,3 @@
 import './styles.css';
-import './test-image.jpg'; // Import image to trigger Webpack processing
+import './assets/test-image.jpg'; // Fixed path
 console.log('Hello, Webpack!');

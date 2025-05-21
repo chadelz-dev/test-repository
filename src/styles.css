@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'CustomFont';
-  src: url('./custom-font.ttf') format('truetype');
+  src: url('./assets/custom-font.ttf') format('truetype');
 }
 
 body {
@@ -9,5 +9,5 @@ body {
 }
 
 h1 {
-  color: navy;
+  color: rgb(0, 128, 34);
 }

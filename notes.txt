@@ -138,5 +138,440 @@
 
   - check compatibility if issues arise.
 
+// ////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
+
+
+-- npm run commands and their purposes:
+
+-- 1. npm run dev
+
+   - Purpose: Starts a local development server with live reload and hot module replacement.
+
+   - Command: 
+
+     - Run `npm run dev` in the project root.
+
+     - Opens `http://localhost:8080` in your browser.
+
+
+   - Why/When: 
+
+     - Use during development to test and preview changes in real-time.
+
+     - Displays the site (e.g., `index.html`, JS, CSS, images, 
+     
+       - fonts) as configured in `webpack.dev.js`.
+
+     - Essential for checking `src/` files (e.g., `index.js`,
+     
+       - `styles.css`, `template.html`, `assets/`).
+
+
+   - Notes:
+
+     - Requires `webpack-dev-server` (included in `package.json`).
+
+     - If errors occur (e.g., `Module not found`), verify file paths in `src/`
+     
+       -  (e.g., `assets/test-image.jpg`, `assets/custom-font.ttf`).
+
+     - Example: Shows “Hello, Webpack!” with custom font, image, and CSS styles.
+
+// //////
+
+
+-- 2. npm run build
+
+   - Purpose: Creates a production-ready bundle of your project files.
+
+   - Command: 
+
+     - Run `npm run build` in the project root.
+
+     - Outputs files to `dist/` (e.g., `index.html`, `main.js`, `assets/`).
+
+
+   - Why/When: 
+
+     - Use to generate optimized files for deployment (minified JS/CSS, copied assets).
+
+     - Run before `npm run deploy` or to test production builds locally.
+
+     - Configured in `webpack.prod.js` (minifies with `CssMinimizerPlugin`, uses `source-map`).
+
+
+   - Notes:
+
+     - Check `dist/` after running:
+
+       - `ls -la dist` should show `assets/`, `index.html`, `main.js`.
+
+       - `ls -la dist/assets` should show copied files 
+       
+         - (e.g., `test-image.jpg`, `custom-font.ttf`).
+
+
+     - Excludes `node_modules/` (only bundles imported `src/` files).
+
+     - If large fonts (>244 KiB, e.g., 672 KiB `custom-font.ttf`)
+     
+       -  trigger warnings, subset with `glyphhanger`.
+
+// //////
+
+
+-- 3. npm run deploy
+
+   - Purpose: Builds the project and
+   
+     -  deploys it to `deploy-branch` for GitHub Pages hosting.
+
+
+   - Command: 
+
+     - Run `npm run deploy` in the project root.
+
+     - Executes:
+
+       - `npm run build` to generate `dist/`.
+
+       - Creates `deploy-branch` via `git checkout -B deploy-branch`.
+
+       - Moves `dist/*` to `deploy-branch`’s root, commits, and pushes with `--force`.
+
+       - Switches back to `main`.
+
+
+   - Why/When: 
+
+     - Use to publish the site to GitHub Pages 
+     
+       - (e.g., `https://chadelz-dev.github.io/test-project/`).
+
+     - Automates deployment after changes (e.g., updated `src/styles.css`).
+
+     - Ensures root-level serving (`/` directory) for GitHub Pages.
+
+
+   - Notes:
+
+     - Excludes `node_modules/` (only `dist/` files: `index.html`, `main.js`, `assets/`).
+
+     - `deploy-branch` is created automatically; no manual creation needed.
+
+     - If the site doesn’t update, check for GitHub Pages delays 
+     
+       - (wait ~1 minute) or browser caching (clear cache or use incognito).
+
+
+     - Verify `deploy-branch` contents:
+
+       - `git checkout deploy-branch && ls -la` 
+       
+         - should show `assets/`, `index.html`, `main.js`.
+
+       - `ls -la assets` 
+       
+         - should show `custom-font.ttf`, `test-image.jpg`.
+
+// //////
+
+
+-- 4. GitHub Pages Setup
+
+   - Purpose: Configures GitHub Pages to serve the site from `deploy-branch`.
+
+   - Command/Steps:
+
+     - Go to `https://github.com/<your-username>/<repo-name>/settings`
+     
+       -  (e.g., `https://github.com/chadelz-dev/test-project/settings`).
+
+     - Scroll to the **GitHub Pages** section.
+
+     - Under **Source**, select **Branch: deploy-branch**, Directory: `/ (root)`.
+
+     - Click **Save** and wait ~1 minute for deployment.
+
+     - Visit `https://<your-username>.github.io/<repo-name>/`
+     
+       - (e.g., `https://chadelz-dev.github.io/test-project/`).
+
+
+   - Why/When: 
+
+     - Required once to tell GitHub Pages to serve `deploy-branch`’s root 
+     
+       - (where `npm run deploy` places files).
+
+     - Use after the first `npm run deploy` to make the site live.
+
+     - Only needed once; 
+     
+       - subsequent `npm run deploy` calls update `deploy-branch` automatically.
+
+
+   - Notes:
+
+     - If the site shows old content, clear browser cache, 
+     
+       - use incognito mode, or wait for GitHub Pages to rebuild (~1–2 minutes).
+
+     - Check the **GitHub Pages** section for status 
+     
+       - (e.g., “Your site is published at…”).
+
+     - If 404 or no update, verify 
+     
+       - `deploy-branch` is selected and contains `index.html`, `main.js`, `assets/`.
+
+     - For private repos, GitHub Pages requires a paid plan.
+
+// ////////////////////////////////////////////////////////////////////////////
+
+
+-- Additional Notes:
+
+- These commands assume `package.json` scripts are set:
+
+  - `"dev": "webpack serve --config webpack.dev.js"`
+
+  - `"build": "webpack --config webpack.prod.js"`
+
+  - `"deploy": "npm run build && git checkout -B deploy-branch 
+  
+    - && rm -rf ./assets && mv dist/* . && rm -rf dist && git add . 
+    
+    - && git diff --staged --quiet || git commit -m 'Deploy' 
+    
+    - && git push origin deploy-branch --force && git checkout main"`
+
+// //////
+
+
+- `node_modules/` is never included in `dist/` or `deploy-branch`:
+
+  - Webpack only bundles `src/` imports (JS, CSS, images, fonts).
+
+  - `.gitignore` excludes `node_modules/`.
+
+  - Verify with `ls -la dist` or `ls -la` on `deploy-branch`.
+
+// //////
+
+
+- Troubleshooting:
+
+  - **Module not found errors**: Ensure correct paths
+  
+    - (e.g., `assets/test-image.jpg`, `assets/custom-font.ttf`)
+    
+    - in `index.js`, `styles.css`, `template.html`.
+
+
+  - **Deployment delays**: Wait ~1–2 minutes or check GitHub Pages status.
+
+
+  - **Large font warnings**: If `custom-font.ttf` 
+  
+    - (~672 KiB) triggers warnings, subset with `glyphhanger` 
+    
+    - (see npm install notes).
+
+  - Run `git remote -v` to confirm `origin` 
+  
+    - (e.g., `git@github.com:chadelz-dev/test-project.git`).
+
+
+- Example usage:
+
+  - Edit `src/styles.css` (e.g., add `background-color: #f0f0f0`), 
+  
+    - commit, run `npm run deploy`, and check the site for updates.
+
+
+- Yarn alternative:
+
+  - Use `yarn install` instead of `npm install` for dependencies.
+
+  - Use `yarn dev`, `yarn build`, `yarn deploy` 
+  
+    - if scripts are aliased in `package.json`.
+
+// ////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
+
+
+-- Project and Asset Structure:
+
+-- 1. Asset Structure (Images, Fonts, etc.)
+
+   - Purpose: Organizes images, fonts,
+   
+     - and other assets in the project for Webpack processing.
+
+
+   - Structure:
+
+     - Place assets in `src/assets/` 
+     
+       - (e.g., `src/assets/test-image.jpg`, `src/assets/custom-font.ttf`).
+
+     - Reference in code with relative paths:
+
+       - `index.js`: `import './assets/test-image.jpg';`
+
+       - `styles.css`: `url('./assets/custom-font.ttf')`
+
+       - `template.html`: `<img src="./assets/test-image.jpg" alt="Image" />`
+
+     - Webpack copies assets to `dist/assets/` 
+     
+       - during `npm run build` or `npm run deploy`.
+
+
+   - Why/When:
+
+     - Use `src/assets/` to keep assets organized and avoid clutter in `src/`.
+
+     - Required for images (e.g., JPG, PNG), fonts 
+     
+       - (e.g., TTF, WOFF), or other files processed by Webpack’s `asset/resource`.
+
+     - Ensures correct bundling and deployment to `deploy-branch`.
+
+
+   - Notes:
+
+     - Verify paths match file locations to avoid `Module not found` errors.
+
+     - Example: `ls -la src/assets` 
+     
+       - should show `test-image.jpg`, `custom-font.ttf`.
+
+     - Large fonts (>244 KiB, e.g., 672 KiB `custom-font.ttf`) 
+     
+       - may trigger Webpack warnings; subset with `glyphhanger`.
+
+
+     - Add new assets (e.g., `new-image.png`) to `src/assets/` 
+     
+       - and import in `index.js` or reference in `styles.css`.
+
+// //////
+
+
+-- 2. Overall Project Structure
+
+   - Purpose: Defines the role of each file/directory in the Webpack project.
+
+   - Structure:
+
+     - `src/`: Source files.
+
+       - `index.js`: Entry point for JS (imports CSS, assets).
+
+       - `template.html`: HTML template for `HtmlWebpackPlugin`.
+
+       - `styles.css`: CSS styles (e.g., fonts, colors).
+
+       - `assets/`: Images, fonts, etc. (e.g., `test-image.jpg`, `custom-font.ttf`).
+
+
+     - `dist/`: Output directory for built files (generated by `npm run build`).
+
+       - Contains `index.html`, `main.js`, `assets/` (copied images/fonts).
+
+
+     - `node_modules/`: Dependencies (excluded from `dist/` and `deploy-branch`).
+
+     - `webpack.common.js`: Shared Webpack config (entry, output, plugins, rules).
+
+     - `webpack.dev.js`: Development config (dev server, source maps).
+
+     - `webpack.prod.js`: Production config (minification, optimization).
+
+     - `package.json`: Scripts (`dev`, `build`, `deploy`) and dependencies.
+
+     - `.gitignore`: Excludes `node_modules/`, `dist/` from Git.
+
+     - `notes.txt`: This file (command references, tips).
+
+
+   - Why/When:
+
+     - Use this structure for all projects based on the template.
+
+     - Ensures Webpack processes files correctly and deployments are clean.
+
+
+   - Notes:
+
+     - Keep source files in `src/` 
+     
+       - to separate development from production output (`dist/`).
+
+     - `dist/` is temporary (cleared by `npm run build`);
+     
+       - `deploy-branch` holds final files.
+
+     - Verify structure with `ls -la` in project root.
+
+// ////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
+
+
+-- Final Notes:
+
+- These notes cover all key aspects of the Webpack template:
+
+  - Dependency installation (`npm install` commands).
+
+  - Running the project (`npm run dev`, `build`, `deploy`).
+
+  - Hosting setup (GitHub Pages).
+
+  - File organization (`src/assets/`, project structure).
+
+  - Troubleshooting (errors, delays, warnings).
+
+  - Additional tools (Git, Yarn, best practices).
+
+// //////
+
+
+- To use the template in a new project:
+
+  - Create a repo from `webpack-template` on GitHub.
+
+  - Clone, run `npm install`, add `src/` files, and follow these notes.
+
+// //////
+
+
+- Keep `notes.txt` in the project root for easy reference.
+
+- If issues arise, check:
+
+  - File paths (`ls -la src src/assets`).
+
+  - Command outputs (`npm run dev`, `npm run deploy`).
+
+  - GitHub Pages settings or browser console.
+
+// //////
+
+
+- Example workflow:
+
+  - Edit `src/styles.css`, 
+  
+  - test with `npm run dev`, 
+  
+  - commit, run `npm run deploy`, 
+  
+  - verify `https://<your-username>.github.io/<repo-name>/`.
 
 // ////////////////////////////////////////////////////////////////////////////

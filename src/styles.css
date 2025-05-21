@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'CustomFont';
+  src: url('./custom-font.ttf') format('truetype');
+}
+
+body {
+  font-family: 'CustomFont', Arial, sans-serif;
+  text-align: center;
+}
+
+h1 {
+  color: navy;
+}

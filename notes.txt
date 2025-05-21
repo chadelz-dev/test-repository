@@ -1,0 +1,142 @@
+// ////////////////////////////////////////////////////////////////////////////
+
+
+-- Webpack Template Notes
+ - Contains npm install commands for dependencies in this template, 
+ 
+   - for reference if you need to add or update them in future projects. 
+ 
+ - These install the latest versions.
+
+// ////////////////////////////////////////////////////////////////////////////
+
+
+-- npm install commands and their purposes:
+
+-- 1. npm install --save-dev css-loader
+
+   - Purpose: Processes CSS files for Webpack bundling.
+   
+   - Why/When: Needed for CSS imports in JS 
+   
+     - (e.g., `import './styles.css'`). Use for any project with CSS.
+
+// //////
+
+
+-- 2. npm install --save-dev css-minimizer-webpack-plugin
+   
+   - Purpose: Minifies CSS in production builds to reduce file size.
+   
+   - Why/When: Use in production for faster loading. 
+     
+     - Optional if minification isn’t needed.
+
+// //////
+
+
+-- 3. npm install --save-dev file-loader
+   
+   - Purpose: Copies files (e.g., images, fonts) to the output directory.
+   
+   - Why/When: Needed for projects with images or fonts (e.g., PNG, TTF). 
+   
+     - Use for compatibility,
+     
+     -  though Webpack 5’s `asset/resource` often replaces it
+
+// //////
+
+
+-- 4. npm install --save-dev html-loader
+   
+   - Purpose: Processes HTML files for imports and minification.
+   
+   - Why/When: Use for importing HTML in JS or processing templates. 
+   
+     - Needed for advanced HTML handling.
+
+// //////
+
+
+-- 5. npm install --save-dev html-webpack-plugin
+   
+   - Purpose: Generates HTML files (e.g., `index.html`) and injects bundled JS/CSS.
+   
+   - Why/When: Essential for projects needing an HTML entry point 
+   
+     - (e.g., `src/template.html`).
+
+// //////
+
+
+-- 6. npm install --save-dev style-loader
+   
+   - Purpose: Injects CSS into the DOM via <style> tags during development.
+   
+   - Why/When: Required for CSS in the dev server. 
+   
+     - Use with `css-loader` for development.
+
+// //////
+
+
+-- 7. npm install --save-dev webpack
+   
+   - Purpose: Core Webpack module bundler.
+   
+   - Why/When: Required for all Webpack projects to bundle JS, CSS, and assets.
+
+// //////
+
+
+-- 8. npm install --save-dev webpack-cli
+   
+   - Purpose: Provides CLI for running Webpack commands (e.g., `npx webpack`).
+   
+   - Why/When: Needed to execute Webpack builds and scripts from the terminal.
+
+// //////
+
+
+-- 9. npm install --save-dev webpack-dev-server
+   
+   - Purpose: Runs a local dev server with live reload and hot module replacement.
+   
+   - Why/When: Essential for `npm run dev` to test projects locally 
+   
+     - (e.g., `http://localhost:8080`).
+
+// //////
+
+
+-- 10. npm install --save-dev webpack-merge
+   
+    - Purpose: Merges Webpack configs 
+      
+      - (e.g., `webpack.common.js` with `webpack.dev.js`).
+   
+    - Why/When: Required for split config setups to avoid duplicating code.
+
+
+// ////////////////////////////////////////////////////////////////////////////
+
+
+-- Notes:
+
+- Dependencies are included in `package.json`. 
+
+  - Run `npm install` in a new project to fetch the latest versions automatically.
+
+
+- Use these `npm install` commands
+
+  -  to add dependencies to other projects or update versions manually.
+
+
+- Latest versions may introduce breaking changes; 
+
+  - check compatibility if issues arise.
+
+
+// ////////////////////////////////////////////////////////////////////////////

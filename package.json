@@ -1,0 +1,21 @@
+{
+  "name": "webpack-template",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "dev": "webpack serve --config webpack.dev.js",
+    "deploy": "npm run build && git checkout -B deploy-branch && rm -rf ./assets && mv dist/* . && rm -rf dist && git add . && git diff --staged --quiet || git commit -m 'Deploy' && git push origin deploy-branch --force && git checkout main"
+  },
+  "devDependencies": {
+    "css-loader": "*",
+    "css-minimizer-webpack-plugin": "*",
+    "file-loader": "*",
+    "html-loader": "*",
+    "html-webpack-plugin": "*",
+    "style-loader": "*",
+    "webpack": "*",
+    "webpack-cli": "*",
+    "webpack-dev-server": "*",
+    "webpack-merge": "*"
+  }
+}

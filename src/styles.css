@@ -6,8 +6,10 @@
 body {
   font-family: 'CustomFont', Arial, sans-serif;
   text-align: center;
+  background-color: #f0f0f0;
 }
 
 h1 {
-  color: rgb(0, 128, 34);
+  color: rgb(77, 121, 215);
+  font-size: 2.5rem;
 }
